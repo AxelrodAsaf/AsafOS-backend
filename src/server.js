@@ -13,13 +13,34 @@ dotenv.config();
 const app = express();
 const port = Number(process.env.PORT || 3000);
 
-const corsOrigin = process.env.CORS_ORIGIN?.trim();
+const parseAllowedOrigins = (value) => {
+  const configuredOrigins = (value || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  const defaultDevOrigins = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080"
+  ];
+
+  return [...new Set([...configuredOrigins, ...defaultDevOrigins])];
+};
+
+const allowedOrigins = parseAllowedOrigins(process.env.CORS_ORIGIN);
 
 app.use(
   cors(
-    corsOrigin
+    allowedOrigins.length > 0
       ? {
-          origin: corsOrigin
+          origin(origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+              callback(null, true);
+              return;
+            }
+
+            callback(new Error(`Origin ${origin} is not allowed by CORS.`));
+          }
         }
       : undefined
   )
