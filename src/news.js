@@ -15,11 +15,25 @@ const imageFromHtml = (html) => {
   return match?.[1] ?? "";
 };
 
+const normalizeImageUrl = (url) => {
+  if (!url) {
+    return "";
+  }
+
+  if (url.startsWith("//")) {
+    return `https:${url}`;
+  }
+
+  return url;
+};
+
 const imageFromItem = (item) =>
-  item.enclosure?.url ??
-  item["media:content"]?.$.url ??
-  item["media:thumbnail"]?.$.url ??
-  imageFromHtml(item.content ?? item.contentSnippet ?? item.description ?? "");
+  normalizeImageUrl(
+    item.enclosure?.url ??
+      item["media:content"]?.$.url ??
+      item["media:thumbnail"]?.$.url ??
+      imageFromHtml(item.content ?? item.contentSnippet ?? item.description ?? "")
+  );
 
 export const fetchN12News = async (feedUrl, limit = 10) => {
   if (!feedUrl) {
