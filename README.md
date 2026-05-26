@@ -7,6 +7,7 @@ This service is intended to run on Render and provide:
 - Spotify recently played
 - Spotify recent songs
 - Spotify top artists
+- Strava latest run summary
 - N12 RSS proxy
 - map config
 - future resume PDF config
@@ -18,6 +19,7 @@ This service is intended to run on Render and provide:
 - `GET /api/spotify/recently-played`
 - `GET /api/spotify/recent-songs`
 - `GET /api/spotify/top-artists`
+- `GET /api/strava/latest-run`
 - `GET /api/news/n12`
 
 ## Local Run
@@ -54,9 +56,13 @@ Recommended settings:
 - `STADIA_API_KEY`
 - `STADIA_MAP_STYLE`
 - `RESUME_PDF_URL`
+- `STRAVA_CLIENT_ID`
+- `STRAVA_CLIENT_SECRET`
+- `STRAVA_REFRESH_TOKEN`
 
 ## Notes
 
 - `CORS_ORIGIN` may be a comma-separated list of allowed origins.
 - The server also allows `http://localhost:8080` and `http://127.0.0.1:8080` for local frontend testing.
 - The frontend repo consumes this backend from both Netlify and local `localhost:8080`.
+- A live Strava tile needs OAuth credentials from a Strava app plus a user refresh token with activity read scope.

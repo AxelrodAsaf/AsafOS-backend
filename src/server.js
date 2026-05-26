@@ -7,6 +7,7 @@ import {
   fetchRecentlyPlayed,
   fetchTopArtists
 } from "./spotify.js";
+import { fetchLatestRun } from "./strava.js";
 
 dotenv.config();
 
@@ -51,6 +52,12 @@ const spotifyConfig = {
   clientId: process.env.SPOTIFY_CLIENT_ID,
   clientSecret: process.env.SPOTIFY_CLIENT_SECRET,
   refreshToken: process.env.SPOTIFY_REFRESH_TOKEN
+};
+
+const stravaConfig = {
+  clientId: process.env.STRAVA_CLIENT_ID,
+  clientSecret: process.env.STRAVA_CLIENT_SECRET,
+  refreshToken: process.env.STRAVA_REFRESH_TOKEN
 };
 
 const parsePositiveInt = (value, fallback) => {
@@ -144,6 +151,17 @@ app.get("/api/news/n12", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: error instanceof Error ? error.message : "Unknown RSS error."
+    });
+  }
+});
+
+app.get("/api/strava/latest-run", async (_req, res) => {
+  try {
+    const data = await fetchLatestRun(stravaConfig);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown Strava error."
     });
   }
 });
