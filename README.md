@@ -23,6 +23,7 @@ This service is intended to run on Render and provide:
 ## Local Run
 
 ```bash
+cd "/Users/asafaxelrod/Desktop/AsafOS - Codex/backend"
 npm install
 cp .env.example .env
 npm run start
@@ -53,3 +54,9 @@ Recommended settings:
 - `STADIA_API_KEY`
 - `STADIA_MAP_STYLE`
 - `RESUME_PDF_URL`
+
+## Notes
+
+- `CORS_ORIGIN` may be a comma-separated list of allowed origins.
+- The server also allows `http://localhost:8080` and `http://127.0.0.1:8080` for local frontend testing.
+- The frontend repo consumes this backend from both Netlify and local `localhost:8080`.
