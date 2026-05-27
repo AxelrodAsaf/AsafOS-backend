@@ -1,6 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
+import { fetchGoodreadsData } from "./goodreads.js";
 import { fetchN12News } from "./news.js";
 import {
   fetchRecentSongs,
@@ -151,6 +152,18 @@ app.get("/api/news/n12", async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: error instanceof Error ? error.message : "Unknown RSS error."
+    });
+  }
+});
+
+app.get("/api/goodreads", async (req, res) => {
+  try {
+    const limit = parsePositiveInt(req.query.limit, 25);
+    const data = await fetchGoodreadsData(process.env.GOODREADS_USER_ID, limit);
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({
+      error: error instanceof Error ? error.message : "Unknown Goodreads error."
     });
   }
 });
