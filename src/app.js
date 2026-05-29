@@ -15,7 +15,7 @@ import {
   fetchRecentlyPlayed,
   fetchTopArtists
 } from "./spotify.js";
-import { fetchLatestRun } from "./strava.js";
+import { fetchLatestNonRunActivity, fetchLatestRun } from "./strava.js";
 
 const createCorsOptions = () => {
   if (allowedOrigins.length === 0) {
@@ -119,6 +119,15 @@ export const createApp = () => {
   app.get("/api/strava/latest-run", async (_req, res) => {
     try {
       const data = await fetchLatestRun(stravaConfig);
+      res.json(data);
+    } catch (error) {
+      respondWithError(res, error, "Unknown Strava error.");
+    }
+  });
+
+  app.get("/api/strava/latest-non-run", async (_req, res) => {
+    try {
+      const data = await fetchLatestNonRunActivity(stravaConfig);
       res.json(data);
     } catch (error) {
       respondWithError(res, error, "Unknown Strava error.");
