@@ -22,6 +22,19 @@ This service is intended to run on Render and provide:
 - `GET /api/strava/latest-run`
 - `GET /api/news/n12`
 
+## Structure
+
+- `src/server.js`
+  - startup only
+- `src/app.js`
+  - express app creation and route wiring
+- `src/config.js`
+  - environment parsing and shared backend config
+- `src/spotify.js`
+- `src/strava.js`
+- `src/news.js`
+- `src/goodreads.js`
+
 ## Local Run
 
 ```bash
@@ -66,3 +79,4 @@ Recommended settings:
 - The server also allows `http://localhost:8080` and `http://127.0.0.1:8080` for local frontend testing.
 - The frontend repo consumes this backend from both Netlify and local `localhost:8080`.
 - A live Strava tile needs OAuth credentials from a Strava app plus a user refresh token with activity read scope.
+- Shared config and route composition are split out so new integrations can be added without growing `server.js`.
