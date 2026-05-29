@@ -1,18 +1,34 @@
 # AsafOS Backend
 
-Backend for AsafOS.
+This backend powers the live data behind [AsafOS](https://asafos.netlify.app/frontend/), a portfolio/resume site presented as an interactive tile-based interface.
 
-This service is intended to run on Render and provide:
+The backend exists to keep the frontend simple while still allowing the site to show live personal data such as Spotify listening, Strava activity, Goodreads reading, RSS news, and map/resume configuration.
 
-- Spotify recently played
-- Spotify recent songs
-- Spotify top artists
-- Strava latest run summary
+## What It Does
+
+The service acts as a thin integration layer between the frontend and external APIs.
+
+It currently provides:
+
+- Spotify:
+  - latest played track
+  - recent songs
+  - top artists
+- Strava:
+  - latest run summary
+  - latest non-run activity with heart-rate stream data
+- Goodreads:
+  - currently reading
+  - recent rated books
 - N12 RSS proxy
-- map config
-- future resume PDF config
+- map/config data for the frontend
+- optional resume PDF URL configuration
 
-## Endpoints
+## Live Frontend
+
+- Website: [https://asafos.netlify.app/frontend/](https://asafos.netlify.app/frontend/)
+
+## API Surface
 
 - `GET /health`
 - `GET /api/config`
@@ -20,6 +36,8 @@ This service is intended to run on Render and provide:
 - `GET /api/spotify/recent-songs`
 - `GET /api/spotify/top-artists`
 - `GET /api/strava/latest-run`
+- `GET /api/strava/latest-non-run`
+- `GET /api/goodreads`
 - `GET /api/news/n12`
 
 ## Structure
@@ -29,13 +47,13 @@ This service is intended to run on Render and provide:
 - `src/app.js`
   - express app creation and route wiring
 - `src/config.js`
-  - environment parsing and shared backend config
+  - environment parsing and shared configuration
 - `src/spotify.js`
 - `src/strava.js`
-- `src/news.js`
 - `src/goodreads.js`
+- `src/news.js`
 
-## Local Run
+## Running Locally
 
 ```bash
 cd "/Users/asafaxelrod/Desktop/AsafOS - Codex/backend"
@@ -44,39 +62,19 @@ cp .env.example .env
 npm run start
 ```
 
-## Render
+## Deployment
 
-Recommended settings:
+This service is intended to run on Render as the live backend for the site.
+
+Typical settings:
 
 - Runtime: `Node`
 - Build command: `npm install`
 - Start command: `npm run start`
 - Health check path: `/health`
 
-## Required Environment Variables
-
-- `SPOTIFY_CLIENT_ID`
-- `SPOTIFY_CLIENT_SECRET`
-- `SPOTIFY_REFRESH_TOKEN`
-
-## Optional Environment Variables
-
-- `CORS_ORIGIN`
-- `SPOTIFY_RECENT_LIMIT`
-- `SPOTIFY_TOP_ARTISTS_LIMIT`
-- `SPOTIFY_TOP_ARTISTS_TIME_RANGE`
-- `N12_RSS_URL`
-- `STADIA_API_KEY`
-- `STADIA_MAP_STYLE`
-- `RESUME_PDF_URL`
-- `STRAVA_CLIENT_ID`
-- `STRAVA_CLIENT_SECRET`
-- `STRAVA_REFRESH_TOKEN`
-
 ## Notes
 
-- `CORS_ORIGIN` may be a comma-separated list of allowed origins.
-- The server also allows `http://localhost:8080` and `http://127.0.0.1:8080` for local frontend testing.
-- The frontend repo consumes this backend from both Netlify and local `localhost:8080`.
-- A live Strava tile needs OAuth credentials from a Strava app plus a user refresh token with activity read scope.
-- Shared config and route composition are split out so new integrations can be added without growing `server.js`.
+- The backend is not meant to be a standalone product. It is an application-specific service for AsafOS.
+- Its main purpose is to proxy or normalize data that the frontend should not fetch directly from third-party sources.
+- Keeping these integrations here avoids exposing secrets in the frontend and makes tile behavior easier to evolve over time.

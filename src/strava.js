@@ -76,7 +76,7 @@ const toLatestRunSummary = (activity) => ({
   sportType: activity.sport_type ?? activity.type ?? "Run"
 });
 
-const sampleStream = (stream, maxPoints = 72) => {
+const sampleStream = (stream, maxPoints = 180) => {
   if (!Array.isArray(stream) || stream.length <= maxPoints) {
     return stream ?? [];
   }
